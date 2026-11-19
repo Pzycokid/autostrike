@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autostrike"
+version = "1.0.0"
+description = "Automated, lab-only red team pipeline: recon, enumeration, exploitation simulation, post-exploitation planning and MITRE ATT&CK-mapped reporting"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Likhith H S"}]
+keywords = ["red-team", "penetration-testing", "mitre-attack", "security", "kill-chain"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+autostrike = "autostrike.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["autostrike*"]
+
+[tool.setuptools.package-data]
+"autostrike.data" = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
