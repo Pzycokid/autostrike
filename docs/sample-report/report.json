@@ -1,0 +1,659 @@
+{
+  "name": "Auto Strike demo lab (simulated 10.10.10.0/24)",
+  "mode": "demo",
+  "scope": [
+    "10.10.10.0/24"
+  ],
+  "live_hosts": [
+    "10.10.10.5",
+    "10.10.10.12",
+    "10.10.10.20",
+    "10.10.10.30",
+    "10.10.10.40"
+  ],
+  "hosts": [
+    {
+      "ip": "10.10.10.5",
+      "hostname": "web01.lab.local",
+      "os_guess": "linux",
+      "services": [
+        {
+          "port": 22,
+          "proto": "tcp",
+          "name": "ssh",
+          "product": "OpenSSH",
+          "version": "7.4",
+          "banner": "SSH-2.0-OpenSSH_7.4"
+        },
+        {
+          "port": 80,
+          "proto": "tcp",
+          "name": "http",
+          "product": "Apache httpd",
+          "version": "2.4.49",
+          "banner": "HTTP/1.1 200 OK\r\nDate: Thu, 20 Nov 2026 09:00:00 GMT\r\nServer: Apache/2.4.49 (Unix)\r\nContent-Type: text/html"
+        },
+        {
+          "port": 8080,
+          "proto": "tcp",
+          "name": "http",
+          "product": "Apache Tomcat",
+          "version": "9.0.30",
+          "banner": "HTTP/1.1 302 Found\r\nServer: Apache Tomcat/9.0.30\r\nLocation: /manager/html"
+        }
+      ]
+    },
+    {
+      "ip": "10.10.10.12",
+      "hostname": "files01.lab.local",
+      "os_guess": "windows",
+      "services": [
+        {
+          "port": 21,
+          "proto": "tcp",
+          "name": "ftp",
+          "product": "vsftpd",
+          "version": "2.3.4",
+          "banner": "220 (vsFTPd 2.3.4)"
+        },
+        {
+          "port": 139,
+          "proto": "tcp",
+          "name": "netbios-ssn",
+          "product": "",
+          "version": "",
+          "banner": ""
+        },
+        {
+          "port": 445,
+          "proto": "tcp",
+          "name": "smb",
+          "product": "SMBv1",
+          "version": "",
+          "banner": "SMBv1 dialect NT LM 0.12 - Windows 7 Professional 7601 Service Pack 1"
+        }
+      ]
+    },
+    {
+      "ip": "10.10.10.20",
+      "hostname": "db01.lab.local",
+      "os_guess": "linux",
+      "services": [
+        {
+          "port": 22,
+          "proto": "tcp",
+          "name": "ssh",
+          "product": "OpenSSH",
+          "version": "8.9p1",
+          "banner": "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6"
+        },
+        {
+          "port": 3306,
+          "proto": "tcp",
+          "name": "mysql",
+          "product": "MySQL",
+          "version": "5.5.62",
+          "banner": "J\u0000\u0000\u0000\n5.5.62-0ubuntu0.14.04.1\u0000"
+        },
+        {
+          "port": 6379,
+          "proto": "tcp",
+          "name": "redis",
+          "product": "Redis",
+          "version": "",
+          "banner": "+PONG"
+        }
+      ]
+    },
+    {
+      "ip": "10.10.10.30",
+      "hostname": "legacy01.lab.local",
+      "os_guess": "linux",
+      "services": [
+        {
+          "port": 23,
+          "proto": "tcp",
+          "name": "telnet",
+          "product": "",
+          "version": "",
+          "banner": "Ubuntu 8.04\r\nlegacy01 login:"
+        },
+        {
+          "port": 3389,
+          "proto": "tcp",
+          "name": "rdp",
+          "product": "",
+          "version": "",
+          "banner": ""
+        }
+      ]
+    },
+    {
+      "ip": "10.10.10.40",
+      "hostname": "dc01.lab.local",
+      "os_guess": "windows",
+      "services": [
+        {
+          "port": 53,
+          "proto": "tcp",
+          "name": "dns",
+          "product": "",
+          "version": "",
+          "banner": ""
+        },
+        {
+          "port": 88,
+          "proto": "tcp",
+          "name": "kerberos",
+          "product": "",
+          "version": "",
+          "banner": ""
+        },
+        {
+          "port": 389,
+          "proto": "tcp",
+          "name": "ldap",
+          "product": "",
+          "version": "",
+          "banner": ""
+        },
+        {
+          "port": 445,
+          "proto": "tcp",
+          "name": "smb",
+          "product": "",
+          "version": "",
+          "banner": "SMB 3.1.1 signing required - Windows Server 2022"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "rule_id": "AS-003",
+      "host": "10.10.10.5",
+      "port": 80,
+      "title": "Apache HTTP Server 2.4.49 path traversal",
+      "severity": "critical",
+      "technique": "T1190",
+      "description": "A path normalisation flaw in Apache 2.4.49 allows files outside the document root to be read and, with mod_cgi enabled, remote code execution.",
+      "remediation": "Upgrade to Apache 2.4.51 or later (2.4.50 fix was incomplete, see CVE-2021-42013) and set 'Require all denied' on the filesystem root.",
+      "evidence": "80/tcp Apache httpd 2.4.49 | banner: HTTP/1.1 200 OK",
+      "cve": "CVE-2021-41773"
+    },
+    {
+      "rule_id": "AS-001",
+      "host": "10.10.10.12",
+      "port": 21,
+      "title": "vsftpd 2.3.4 backdoored release",
+      "severity": "critical",
+      "technique": "T1190",
+      "description": "The vsftpd 2.3.4 source archive distributed in mid-2011 contained a backdoor that opens a root shell when a username ending in ':)' is sent.",
+      "remediation": "Replace vsftpd with a current release from a trusted source and verify package signatures.",
+      "evidence": "21/tcp vsftpd 2.3.4 | banner: 220 (vsFTPd 2.3.4)",
+      "cve": "CVE-2011-2523"
+    },
+    {
+      "rule_id": "AS-005",
+      "host": "10.10.10.12",
+      "port": 445,
+      "title": "SMBv1 enabled (MS17-010 exposure)",
+      "severity": "critical",
+      "technique": "T1210",
+      "description": "SMBv1 is enabled. Unpatched hosts are exposed to MS17-010 (EternalBlue), which was used by WannaCry and NotPetya for wormable lateral movement.",
+      "remediation": "Apply MS17-010, disable SMBv1 and block TCP 445 between workstation segments.",
+      "evidence": "445/tcp SMBv1 | banner: SMBv1 dialect NT LM 0.12 - Windows 7 Professional 7601 Service Pack 1",
+      "cve": "CVE-2017-0144"
+    },
+    {
+      "rule_id": "AS-004",
+      "host": "10.10.10.5",
+      "port": 8080,
+      "title": "Tomcat Manager application exposed",
+      "severity": "high",
+      "technique": "T1078.001",
+      "description": "The Tomcat Manager is reachable from the network. It is a frequent target for default or weak credentials, after which a malicious WAR file can be deployed.",
+      "remediation": "Restrict /manager to localhost or a management VLAN, remove default users from tomcat-users.xml and enforce strong credentials.",
+      "evidence": "8080/tcp Apache Tomcat 9.0.30 | banner: HTTP/1.1 302 Found",
+      "cve": null
+    },
+    {
+      "rule_id": "AS-007",
+      "host": "10.10.10.20",
+      "port": 6379,
+      "title": "Redis accepts unauthenticated commands",
+      "severity": "high",
+      "technique": "T1190",
+      "description": "Redis answered PING without authentication. Unauthenticated Redis can be abused to read data or write files such as SSH authorized_keys or cron jobs.",
+      "remediation": "Bind Redis to localhost, enable protected-mode and requirepass or ACLs, and firewall port 6379.",
+      "evidence": "6379/tcp Redis | banner: +PONG",
+      "cve": null
+    },
+    {
+      "rule_id": "AS-006",
+      "host": "10.10.10.30",
+      "port": 23,
+      "title": "Telnet remote access in cleartext",
+      "severity": "high",
+      "technique": "T1040",
+      "description": "Telnet sends credentials and session data unencrypted, so anyone on the network path can capture them.",
+      "remediation": "Disable Telnet and use SSH with key-based authentication.",
+      "evidence": "23/tcp telnet | banner: Ubuntu 8.04",
+      "cve": null
+    },
+    {
+      "rule_id": "AS-002",
+      "host": "10.10.10.5",
+      "port": 22,
+      "title": "OpenSSH username enumeration",
+      "severity": "medium",
+      "technique": "T1087",
+      "description": "OpenSSH before 7.7 responds differently to valid and invalid usernames during public-key authentication, letting an attacker enumerate accounts before password attacks.",
+      "remediation": "Upgrade OpenSSH to 7.7 or later, disable password authentication and rate-limit SSH.",
+      "evidence": "22/tcp OpenSSH 7.4 | banner: SSH-2.0-OpenSSH_7.4",
+      "cve": "CVE-2018-15473"
+    },
+    {
+      "rule_id": "AS-009",
+      "host": "10.10.10.20",
+      "port": 3306,
+      "title": "End-of-life MySQL server",
+      "severity": "medium",
+      "technique": "T1190",
+      "description": "MySQL releases before 5.7 no longer receive security fixes, so known vulnerabilities stay unpatched.",
+      "remediation": "Upgrade to a supported MySQL release and restrict 3306 to application servers.",
+      "evidence": "3306/tcp MySQL 5.5.62 | banner: J\u0000\u0000\u0000",
+      "cve": null
+    },
+    {
+      "rule_id": "AS-008",
+      "host": "10.10.10.30",
+      "port": 3389,
+      "title": "RDP exposed to the network",
+      "severity": "medium",
+      "technique": "T1021.001",
+      "description": "Remote Desktop is reachable. Exposed RDP is a common target for password spraying and, on unpatched systems, for BlueKeep-class vulnerabilities.",
+      "remediation": "Put RDP behind a VPN or RD Gateway, enforce NLA and MFA, and apply account lockout.",
+      "evidence": "3389/tcp rdp",
+      "cve": null
+    }
+  ],
+  "post_plan": [
+    {
+      "host": "10.10.10.5",
+      "order": 1,
+      "tactic": "Discovery",
+      "technique": "T1082",
+      "action": "Collect OS, patch level and architecture (uname -a, /etc/os-release)",
+      "rationale": "Foothold via Apache HTTP Server 2.4.49 path traversal; confirms what privilege-escalation paths apply"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 2,
+      "tactic": "Discovery",
+      "technique": "T1083",
+      "action": "List user profiles, web roots and backup folders for interesting files",
+      "rationale": "Locates configuration files that commonly hold credentials"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 3,
+      "tactic": "Credential Access",
+      "technique": "T1552.001",
+      "action": "Search config files (.env, web.config, *.ini) for stored passwords",
+      "rationale": "Cheapest route to credentials before touching memory"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 4,
+      "tactic": "Credential Access",
+      "technique": "T1003.008",
+      "action": "Read /etc/shadow if privileges allow",
+      "rationale": "Harvests hashes for offline cracking or pass-the-hash"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 5,
+      "tactic": "Persistence",
+      "technique": "T1053.003",
+      "action": "Add a cron entry",
+      "rationale": "Keeps access across reboots; defenders should alert on new tasks/cron jobs"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 6,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "action": "Reuse harvested credentials against 10.10.10.12 over SMB admin shares",
+      "rationale": "10.10.10.12 exposes TCP 445"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 7,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.004",
+      "action": "Try harvested keys/passwords on 10.10.10.20 over SSH",
+      "rationale": "10.10.10.20 exposes TCP 22"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 8,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.001",
+      "action": "Attempt RDP to 10.10.10.30 with harvested credentials",
+      "rationale": "10.10.10.30 exposes TCP 3389"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 9,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "action": "Reuse harvested credentials against 10.10.10.40 over SMB admin shares",
+      "rationale": "10.10.10.40 exposes TCP 445"
+    },
+    {
+      "host": "10.10.10.5",
+      "order": 10,
+      "tactic": "Collection",
+      "technique": "T1005",
+      "action": "Stage data of interest locally for the report (simulated only)",
+      "rationale": "Shows impact without moving real data"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 1,
+      "tactic": "Discovery",
+      "technique": "T1082",
+      "action": "Collect OS, patch level and architecture (systeminfo)",
+      "rationale": "Foothold via vsftpd 2.3.4 backdoored release; confirms what privilege-escalation paths apply"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 2,
+      "tactic": "Discovery",
+      "technique": "T1083",
+      "action": "List user profiles, web roots and backup folders for interesting files",
+      "rationale": "Locates configuration files that commonly hold credentials"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 3,
+      "tactic": "Credential Access",
+      "technique": "T1552.001",
+      "action": "Search config files (.env, web.config, *.ini) for stored passwords",
+      "rationale": "Cheapest route to credentials before touching memory"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 4,
+      "tactic": "Credential Access",
+      "technique": "T1003.001",
+      "action": "Dump LSASS memory",
+      "rationale": "Harvests hashes for offline cracking or pass-the-hash"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 5,
+      "tactic": "Persistence",
+      "technique": "T1053.005",
+      "action": "Register a scheduled task",
+      "rationale": "Keeps access across reboots; defenders should alert on new tasks/cron jobs"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 6,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.004",
+      "action": "Try harvested keys/passwords on 10.10.10.5 over SSH",
+      "rationale": "10.10.10.5 exposes TCP 22"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 7,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.004",
+      "action": "Try harvested keys/passwords on 10.10.10.20 over SSH",
+      "rationale": "10.10.10.20 exposes TCP 22"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 8,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.001",
+      "action": "Attempt RDP to 10.10.10.30 with harvested credentials",
+      "rationale": "10.10.10.30 exposes TCP 3389"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 9,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "action": "Reuse harvested credentials against 10.10.10.40 over SMB admin shares",
+      "rationale": "10.10.10.40 exposes TCP 445"
+    },
+    {
+      "host": "10.10.10.12",
+      "order": 10,
+      "tactic": "Collection",
+      "technique": "T1005",
+      "action": "Stage data of interest locally for the report (simulated only)",
+      "rationale": "Shows impact without moving real data"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 1,
+      "tactic": "Discovery",
+      "technique": "T1082",
+      "action": "Collect OS, patch level and architecture (uname -a, /etc/os-release)",
+      "rationale": "Foothold via Redis accepts unauthenticated commands; confirms what privilege-escalation paths apply"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 2,
+      "tactic": "Discovery",
+      "technique": "T1083",
+      "action": "List user profiles, web roots and backup folders for interesting files",
+      "rationale": "Locates configuration files that commonly hold credentials"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 3,
+      "tactic": "Credential Access",
+      "technique": "T1552.001",
+      "action": "Search config files (.env, web.config, *.ini) for stored passwords",
+      "rationale": "Cheapest route to credentials before touching memory"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 4,
+      "tactic": "Credential Access",
+      "technique": "T1003.008",
+      "action": "Read /etc/shadow if privileges allow",
+      "rationale": "Harvests hashes for offline cracking or pass-the-hash"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 5,
+      "tactic": "Persistence",
+      "technique": "T1053.003",
+      "action": "Add a cron entry",
+      "rationale": "Keeps access across reboots; defenders should alert on new tasks/cron jobs"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 6,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.004",
+      "action": "Try harvested keys/passwords on 10.10.10.5 over SSH",
+      "rationale": "10.10.10.5 exposes TCP 22"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 7,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "action": "Reuse harvested credentials against 10.10.10.12 over SMB admin shares",
+      "rationale": "10.10.10.12 exposes TCP 445"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 8,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.001",
+      "action": "Attempt RDP to 10.10.10.30 with harvested credentials",
+      "rationale": "10.10.10.30 exposes TCP 3389"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 9,
+      "tactic": "Lateral Movement",
+      "technique": "T1021.002",
+      "action": "Reuse harvested credentials against 10.10.10.40 over SMB admin shares",
+      "rationale": "10.10.10.40 exposes TCP 445"
+    },
+    {
+      "host": "10.10.10.20",
+      "order": 10,
+      "tactic": "Collection",
+      "technique": "T1005",
+      "action": "Stage data of interest locally for the report (simulated only)",
+      "rationale": "Shows impact without moving real data"
+    }
+  ],
+  "phases": [
+    {
+      "name": "recon",
+      "started": "2026-11-19T19:14:42+00:00",
+      "finished": "2026-11-19T19:14:42+00:00",
+      "summary": "5 live host(s) out of 254 address(es) probed"
+    },
+    {
+      "name": "enumeration",
+      "started": "2026-11-19T19:14:42+00:00",
+      "finished": "2026-11-19T19:14:42+00:00",
+      "summary": "15 open service(s) fingerprinted on 5 host(s)"
+    },
+    {
+      "name": "exploitation-sim",
+      "started": "2026-11-19T19:14:42+00:00",
+      "finished": "2026-11-19T19:14:42+00:00",
+      "summary": "9 finding(s), 3 critical"
+    },
+    {
+      "name": "post-exploitation-sim",
+      "started": "2026-11-19T19:14:42+00:00",
+      "finished": "2026-11-19T19:14:42+00:00",
+      "summary": "30 simulated step(s) across 3 foothold(s)"
+    }
+  ],
+  "attack_coverage": [
+    [
+      "T1595.001",
+      "Active Scanning: Scanning IP Blocks",
+      "Reconnaissance",
+      1
+    ],
+    [
+      "T1046",
+      "Network Service Discovery",
+      "Discovery",
+      1
+    ],
+    [
+      "T1082",
+      "System Information Discovery",
+      "Discovery",
+      3
+    ],
+    [
+      "T1083",
+      "File and Directory Discovery",
+      "Discovery",
+      3
+    ],
+    [
+      "T1087",
+      "Account Discovery",
+      "Discovery",
+      1
+    ],
+    [
+      "T1078.001",
+      "Valid Accounts: Default Accounts",
+      "Initial Access",
+      1
+    ],
+    [
+      "T1190",
+      "Exploit Public-Facing Application",
+      "Initial Access",
+      4
+    ],
+    [
+      "T1003.001",
+      "OS Credential Dumping: LSASS Memory",
+      "Credential Access",
+      1
+    ],
+    [
+      "T1003.008",
+      "OS Credential Dumping: /etc/passwd and /etc/shadow",
+      "Credential Access",
+      2
+    ],
+    [
+      "T1040",
+      "Network Sniffing",
+      "Credential Access",
+      1
+    ],
+    [
+      "T1552.001",
+      "Unsecured Credentials: Credentials In Files",
+      "Credential Access",
+      3
+    ],
+    [
+      "T1021.001",
+      "Remote Services: Remote Desktop Protocol",
+      "Lateral Movement",
+      4
+    ],
+    [
+      "T1021.002",
+      "Remote Services: SMB/Windows Admin Shares",
+      "Lateral Movement",
+      5
+    ],
+    [
+      "T1021.004",
+      "Remote Services: SSH",
+      "Lateral Movement",
+      4
+    ],
+    [
+      "T1210",
+      "Exploitation of Remote Services",
+      "Lateral Movement",
+      1
+    ],
+    [
+      "T1053.003",
+      "Scheduled Task/Job: Cron",
+      "Persistence",
+      2
+    ],
+    [
+      "T1053.005",
+      "Scheduled Task/Job: Scheduled Task",
+      "Persistence",
+      1
+    ],
+    [
+      "T1005",
+      "Data from Local System",
+      "Collection",
+      3
+    ]
+  ]
+}
