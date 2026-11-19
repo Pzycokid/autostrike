@@ -1,0 +1,122 @@
+[
+  {
+    "id": "AS-001",
+    "match": {"product": "vsftpd", "version_eq": "2.3.4"},
+    "title": "vsftpd 2.3.4 backdoored release",
+    "severity": "critical",
+    "cve": "CVE-2011-2523",
+    "technique": "T1190",
+    "description": "The vsftpd 2.3.4 source archive distributed in mid-2011 contained a backdoor that opens a root shell when a username ending in ':)' is sent.",
+    "remediation": "Replace vsftpd with a current release from a trusted source and verify package signatures."
+  },
+  {
+    "id": "AS-002",
+    "match": {"product": "OpenSSH", "version_lt": "7.7"},
+    "title": "OpenSSH username enumeration",
+    "severity": "medium",
+    "cve": "CVE-2018-15473",
+    "technique": "T1087",
+    "description": "OpenSSH before 7.7 responds differently to valid and invalid usernames during public-key authentication, letting an attacker enumerate accounts before password attacks.",
+    "remediation": "Upgrade OpenSSH to 7.7 or later, disable password authentication and rate-limit SSH."
+  },
+  {
+    "id": "AS-003",
+    "match": {"product": "Apache httpd", "version_eq": "2.4.49"},
+    "title": "Apache HTTP Server 2.4.49 path traversal",
+    "severity": "critical",
+    "cve": "CVE-2021-41773",
+    "technique": "T1190",
+    "description": "A path normalisation flaw in Apache 2.4.49 allows files outside the document root to be read and, with mod_cgi enabled, remote code execution.",
+    "remediation": "Upgrade to Apache 2.4.51 or later (2.4.50 fix was incomplete, see CVE-2021-42013) and set 'Require all denied' on the filesystem root."
+  },
+  {
+    "id": "AS-004",
+    "match": {"product": "Apache Tomcat", "banner_contains": "/manager/html"},
+    "title": "Tomcat Manager application exposed",
+    "severity": "high",
+    "cve": null,
+    "technique": "T1078.001",
+    "description": "The Tomcat Manager is reachable from the network. It is a frequent target for default or weak credentials, after which a malicious WAR file can be deployed.",
+    "remediation": "Restrict /manager to localhost or a management VLAN, remove default users from tomcat-users.xml and enforce strong credentials."
+  },
+  {
+    "id": "AS-005",
+    "match": {"product": "SMBv1"},
+    "title": "SMBv1 enabled (MS17-010 exposure)",
+    "severity": "critical",
+    "cve": "CVE-2017-0144",
+    "technique": "T1210",
+    "description": "SMBv1 is enabled. Unpatched hosts are exposed to MS17-010 (EternalBlue), which was used by WannaCry and NotPetya for wormable lateral movement.",
+    "remediation": "Apply MS17-010, disable SMBv1 and block TCP 445 between workstation segments."
+  },
+  {
+    "id": "AS-006",
+    "match": {"name": "telnet"},
+    "title": "Telnet remote access in cleartext",
+    "severity": "high",
+    "cve": null,
+    "technique": "T1040",
+    "description": "Telnet sends credentials and session data unencrypted, so anyone on the network path can capture them.",
+    "remediation": "Disable Telnet and use SSH with key-based authentication."
+  },
+  {
+    "id": "AS-007",
+    "match": {"product": "Redis", "banner_contains": "+PONG"},
+    "title": "Redis accepts unauthenticated commands",
+    "severity": "high",
+    "cve": null,
+    "technique": "T1190",
+    "description": "Redis answered PING without authentication. Unauthenticated Redis can be abused to read data or write files such as SSH authorized_keys or cron jobs.",
+    "remediation": "Bind Redis to localhost, enable protected-mode and requirepass or ACLs, and firewall port 6379."
+  },
+  {
+    "id": "AS-008",
+    "match": {"name": "rdp"},
+    "title": "RDP exposed to the network",
+    "severity": "medium",
+    "cve": null,
+    "technique": "T1021.001",
+    "description": "Remote Desktop is reachable. Exposed RDP is a common target for password spraying and, on unpatched systems, for BlueKeep-class vulnerabilities.",
+    "remediation": "Put RDP behind a VPN or RD Gateway, enforce NLA and MFA, and apply account lockout."
+  },
+  {
+    "id": "AS-009",
+    "match": {"product": "MySQL", "version_lt": "5.7"},
+    "title": "End-of-life MySQL server",
+    "severity": "medium",
+    "cve": null,
+    "technique": "T1190",
+    "description": "MySQL releases before 5.7 no longer receive security fixes, so known vulnerabilities stay unpatched.",
+    "remediation": "Upgrade to a supported MySQL release and restrict 3306 to application servers."
+  },
+  {
+    "id": "AS-010",
+    "match": {"product": "ProFTPD", "version_eq": "1.3.5"},
+    "title": "ProFTPD 1.3.5 mod_copy unauthenticated file copy",
+    "severity": "critical",
+    "cve": "CVE-2015-3306",
+    "technique": "T1190",
+    "description": "mod_copy in ProFTPD 1.3.5 lets unauthenticated users copy files with SITE CPFR/CPTO, which can be chained into code execution through the web root.",
+    "remediation": "Upgrade ProFTPD and disable mod_copy if it is not needed."
+  },
+  {
+    "id": "AS-011",
+    "match": {"product": "Samba", "version_gte": "3.0.0", "version_lte": "3.0.25"},
+    "title": "Samba usermap_script command injection",
+    "severity": "critical",
+    "cve": "CVE-2007-2447",
+    "technique": "T1190",
+    "description": "When 'username map script' is configured, Samba 3.0.0 to 3.0.25rc3 passes unfiltered usernames to /bin/sh, allowing remote command execution.",
+    "remediation": "Upgrade Samba to a supported release and remove the username map script option."
+  },
+  {
+    "id": "AS-012",
+    "match": {"name": "ftp", "banner_contains": "anonymous"},
+    "title": "FTP advertises anonymous access",
+    "severity": "medium",
+    "cve": null,
+    "technique": "T1078.001",
+    "description": "The FTP banner advertises anonymous login, which often exposes internal files or a writable upload directory.",
+    "remediation": "Disable anonymous FTP or restrict it to a read-only, non-sensitive directory."
+  }
+]

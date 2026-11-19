@@ -1,0 +1,51 @@
+{
+  "name": "Auto Strike demo lab (simulated 10.10.10.0/24)",
+  "scope": ["10.10.10.0/24"],
+  "hosts": [
+    {
+      "ip": "10.10.10.5",
+      "hostname": "web01.lab.local",
+      "ports": {
+        "22": "SSH-2.0-OpenSSH_7.4",
+        "80": "HTTP/1.1 200 OK\r\nDate: Thu, 20 Nov 2026 09:00:00 GMT\r\nServer: Apache/2.4.49 (Unix)\r\nContent-Type: text/html",
+        "8080": "HTTP/1.1 302 Found\r\nServer: Apache Tomcat/9.0.30\r\nLocation: /manager/html"
+      }
+    },
+    {
+      "ip": "10.10.10.12",
+      "hostname": "files01.lab.local",
+      "ports": {
+        "21": "220 (vsFTPd 2.3.4)",
+        "139": "",
+        "445": "SMBv1 dialect NT LM 0.12 - Windows 7 Professional 7601 Service Pack 1"
+      }
+    },
+    {
+      "ip": "10.10.10.20",
+      "hostname": "db01.lab.local",
+      "ports": {
+        "22": "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6",
+        "3306": "J\u0000\u0000\u0000\n5.5.62-0ubuntu0.14.04.1\u0000",
+        "6379": "+PONG"
+      }
+    },
+    {
+      "ip": "10.10.10.30",
+      "hostname": "legacy01.lab.local",
+      "ports": {
+        "23": "Ubuntu 8.04\r\nlegacy01 login:",
+        "3389": ""
+      }
+    },
+    {
+      "ip": "10.10.10.40",
+      "hostname": "dc01.lab.local",
+      "ports": {
+        "53": "",
+        "88": "",
+        "389": "",
+        "445": "SMB 3.1.1 signing required - Windows Server 2022"
+      }
+    }
+  ]
+}
